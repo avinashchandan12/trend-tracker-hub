@@ -39,7 +39,9 @@ const simulateDeepSeekAnalysis = (request: AnalysisRequest): Promise<AnalysisRes
             'IT and Banking sectors showing divergent intraday patterns',
             'Intraday resistance levels identified at 22,780'
           ];
-          recommendation = Math.random() > 0.5 ? 'buy' : 'hold';
+          // Fix Type Error: Use a separate random value to determine recommendation
+          const randomValue = Math.random();
+          recommendation = randomValue > 0.5 ? 'buy' : 'hold';
         } else if (timeRange === 'week') {
           summary = 'Nifty 50 has formed a bullish pattern over the past week, breaking above key resistance levels.';
           insights = [
@@ -91,17 +93,19 @@ const simulateDeepSeekAnalysis = (request: AnalysisRequest): Promise<AnalysisRes
             'Valuation getting stretched but supported by earnings growth',
             'Potential for further upside with some intermittent corrections'
           ];
-          recommendation = Math.random() > 0.4 ? 'buy' : 'hold';
+          // Fix Type Error: Use a separate random value to determine recommendation
+          const randomValue = Math.random();
+          recommendation = randomValue > 0.4 ? 'buy' : 'hold';
         }
       } else if (symbols.length > 0) {
         // Generic response for individual stocks or multiple stocks
-        summary = `Analysis for ${symbols.join(', ')} over ${timeRange} time frame shows ${recommendation === 'buy' ? 'positive' : recommendation === 'sell' ? 'negative' : 'neutral'} signals.`;
+        summary = `Analysis for ${symbols.join(', ')} over ${timeRange} time frame shows mixed signals.`;
         
         if (symbols.length === 1) {
           // More specific for single stock
           const stockName = symbols[0];
           if (timeRange === 'day' || timeRange === 'week') {
-            summary = `${stockName} is showing ${Math.random() > 0.5 ? 'strength' : 'weakness'} in recent ${timeRange} trading.`;
+            summary = `${stockName} is showing ${Math.random() > 0.5 ? 'strength' : 'weakness'} in recent ${timeFrame} trading.`;
             insights = [
               `${stockName} ${Math.random() > 0.5 ? 'above' : 'below'} key moving averages`,
               `Volume analysis suggests ${Math.random() > 0.5 ? 'accumulation' : 'distribution'}`,
