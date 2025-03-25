@@ -9,7 +9,8 @@ import {
   TrendingUp,
   BookOpen,
   Menu,
-  X
+  X,
+  FileText
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -49,6 +50,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isMobile = false, onClose }) => {
       title: 'Analysis',
       icon: LineChart,
       href: '/analysis'
+    },
+    {
+      title: 'Strategy',
+      icon: FileText,
+      href: '/strategy'
     },
     {
       title: 'Journal',
