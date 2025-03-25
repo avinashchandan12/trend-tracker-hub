@@ -107,7 +107,15 @@ const simulateDeepSeekAnalysis = (request: AnalysisRequest): Promise<AnalysisRes
               `Volume analysis suggests ${Math.random() > 0.5 ? 'accumulation' : 'distribution'}`,
               `Relative strength compared to sector is ${Math.random() > 0.5 ? 'positive' : 'negative'}`
             ];
-            recommendation = Math.random() > 0.5 ? 'buy' : (Math.random() > 0.5 ? 'sell' : 'hold');
+            // Fix Type Error: Use a type guard to determine the recommendation
+            const randomValue = Math.random();
+            if (randomValue > 0.5) {
+              recommendation = 'buy';
+            } else if (randomValue > 0.25) {
+              recommendation = 'sell';
+            } else {
+              recommendation = 'hold';
+            }
           } else {
             summary = `${stockName} has been in a ${Math.random() > 0.6 ? 'strong uptrend' : 'consolidation phase'} over the ${timeRange}.`;
             insights = [
@@ -115,7 +123,15 @@ const simulateDeepSeekAnalysis = (request: AnalysisRequest): Promise<AnalysisRes
               `Technical structure remains ${Math.random() > 0.5 ? 'bullish' : 'bearish'} on ${timeRange} chart`,
               `${stockName} ${Math.random() > 0.5 ? 'outperforming' : 'underperforming'} its sector`
             ];
-            recommendation = Math.random() > 0.4 ? 'buy' : (Math.random() > 0.7 ? 'sell' : 'hold');
+            // Fix Type Error: Use a type guard to determine the recommendation
+            const randomValue = Math.random();
+            if (randomValue > 0.6) {
+              recommendation = 'buy';
+            } else if (randomValue > 0.3) {
+              recommendation = 'sell';
+            } else {
+              recommendation = 'hold';
+            }
           }
         } else {
           // Multiple stocks
@@ -124,7 +140,15 @@ const simulateDeepSeekAnalysis = (request: AnalysisRequest): Promise<AnalysisRes
             `Sector rotation evident with ${Math.random() > 0.5 ? 'defensive' : 'growth'} stocks leading`,
             `Correlation analysis suggests diversification benefits across selected stocks`
           ];
-          recommendation = Math.random() > 0.5 ? 'buy' : (Math.random() > 0.7 ? 'sell' : 'hold');
+          // Fix Type Error: Use a type guard to determine the recommendation
+          const randomValue = Math.random();
+          if (randomValue > 0.6) {
+            recommendation = 'buy';
+          } else if (randomValue > 0.3) {
+            recommendation = 'sell';
+          } else {
+            recommendation = 'hold';
+          }
         }
       }
       
