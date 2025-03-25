@@ -16,6 +16,7 @@ import { cn } from '@/lib/utils';
 
 interface SidebarProps {
   isMobile?: boolean;
+  onClose?: () => void;
 }
 
 interface NavItem {
@@ -24,7 +25,7 @@ interface NavItem {
   href: string;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isMobile = false }) => {
+const Sidebar: React.FC<SidebarProps> = ({ isMobile = false, onClose }) => {
   const [collapsed, setCollapsed] = React.useState(false);
   const location = useLocation();
   
@@ -76,6 +77,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isMobile = false }) => {
             ? 'bg-primary text-primary-foreground' 
             : 'text-muted-foreground hover:bg-secondary hover:text-foreground'
         )}
+        onClick={isMobile ? onClose : undefined}
       >
         <item.icon className="h-5 w-5" />
         {!collapsed && <span>{item.title}</span>}
@@ -92,7 +94,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isMobile = false }) => {
     return (
       <div className="fixed inset-0 bg-background z-50 animate-fade-in">
         <div className="flex justify-end p-4">
-          <Button variant="ghost" size="icon" onClick={() => setCollapsed(true)}>
+          <Button variant="ghost" size="icon" onClick={onClose}>
             <X className="h-6 w-6" />
           </Button>
         </div>
