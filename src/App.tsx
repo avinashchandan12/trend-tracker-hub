@@ -10,6 +10,7 @@ import Trades from "./pages/Trades";
 import Settings from "./pages/Settings";
 import Analysis from "./pages/Analysis";
 import Strategy from "./pages/Strategy";
+import Journal from "./pages/Journal";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,6 +28,7 @@ const App = () => (
           <Route path="/settings" element={<Settings />} />
           <Route path="/analysis" element={<Analysis />} />
           <Route path="/strategy" element={<Strategy />} />
+          <Route path="/journal" element={<Journal />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

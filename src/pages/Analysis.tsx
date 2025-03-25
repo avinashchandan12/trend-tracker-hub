@@ -9,6 +9,7 @@ import { Calendar, Filter, TrendingDown, TrendingUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import LineChart from '@/components/charts/LineChart';
+import AIMarketAnalysis from '@/components/analysis/AIMarketAnalysis';
 
 // Sample stocks data for daily, weekly, monthly and yearly performances
 const stocksData = [
@@ -313,6 +314,12 @@ const Analysis: React.FC = () => {
                 <PerformanceTable data={filteredStocksData} timeFrame={timeFrame} type="stock" />
               </TabsContent>
             </Tabs>
+          </div>
+          
+          {/* AI Suggestions Section */}
+          <div className="mt-8">
+            <h2 className="text-xl font-semibold mb-4">AI Suggestions</h2>
+            <AIMarketAnalysis />
           </div>
         </main>
       </div>
