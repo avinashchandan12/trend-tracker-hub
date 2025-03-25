@@ -8,9 +8,10 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { TrendingDown, TrendingUp } from 'lucide-react';
+import { TrendingDown, TrendingUp, LayoutGrid, Layers } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
+import AIMarketAnalysis from '@/components/analysis/AIMarketAnalysis';
 
 // Sample strategies
 const sampleStrategies = [
@@ -50,6 +51,7 @@ const generateOpportunities = (threshold: number = 5) => {
 const Strategy: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('editor');
+  const [viewMode, setViewMode] = useState<'split' | 'aiView'>('split');
   const [strategies, setStrategies] = useState(sampleStrategies);
   const [currentStrategy, setCurrentStrategy] = useState(strategies[0]);
   const [editingStrategy, setEditingStrategy] = useState(currentStrategy.content);
@@ -88,7 +90,7 @@ const Strategy: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-background to-secondary/30">
       {sidebarOpen && (
         <Sidebar isMobile={true} onClose={toggleSidebar} />
       )}
@@ -96,15 +98,40 @@ const Strategy: React.FC = () => {
       <div className="lg:ml-64 pt-16">
         <Header onMenuClick={toggleSidebar} />
         
-        <main className="p-4 max-w-screen-2xl mx-auto">
-          <div className="flex justify-between items-center mb-6">
+        <main className="p-4 max-w-screen-2xl mx-auto responsive-container">
+          <div className="flex flex-wrap justify-between items-center mb-6 gap-4">
             <h1 className="text-2xl font-bold">Trading Strategies</h1>
-            <Button onClick={handleCreateNewStrategy}>New Strategy</Button>
+            <div className="flex items-center gap-3">
+              <div className="bg-muted rounded-md p-1 hidden md:flex">
+                <Button 
+                  variant={viewMode === 'split' ? "default" : "ghost"} 
+                  size="sm"
+                  onClick={() => setViewMode('split')}
+                  className="flex gap-1"
+                >
+                  <LayoutGrid className="h-4 w-4" />
+                  Split View
+                </Button>
+                <Button 
+                  variant={viewMode === 'aiView' ? "default" : "ghost"} 
+                  size="sm"
+                  onClick={() => setViewMode('aiView')}
+                  className="flex gap-1"
+                >
+                  <Layers className="h-4 w-4" />
+                  AI View
+                </Button>
+              </div>
+              <Button onClick={handleCreateNewStrategy}>New Strategy</Button>
+            </div>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="md:col-span-1 space-y-4">
-              <Card>
+          <div className={cn(
+            "grid gap-6",
+            viewMode === 'split' ? "md:grid-cols-3" : "md:grid-cols-2"
+          )}>
+            <div className={cn("space-y-4", viewMode === 'aiView' ? "md:col-span-1" : "md:col-span-1")}>
+              <Card className="bg-card/90 backdrop-blur-sm border-primary/10">
                 <CardHeader>
                   <CardTitle>My Strategies</CardTitle>
                   <CardDescription>Select a strategy to edit or view</CardDescription>
@@ -115,7 +142,7 @@ const Strategy: React.FC = () => {
                       <Button
                         key={strategy.id}
                         variant={strategy.id === currentStrategy.id ? "default" : "outline"}
-                        className="w-full justify-start"
+                        className="w-full justify-start text-left"
                         onClick={() => {
                           setCurrentStrategy(strategy);
                           setEditingStrategy(strategy.content);
@@ -128,7 +155,7 @@ const Strategy: React.FC = () => {
                 </CardContent>
               </Card>
               
-              <Card>
+              <Card className="bg-card/90 backdrop-blur-sm border-primary/10">
                 <CardHeader>
                   <CardTitle>Market Opportunities</CardTitle>
                   <CardDescription>Potential trades based on your strategies</CardDescription>
@@ -142,7 +169,7 @@ const Strategy: React.FC = () => {
                     <TabsContent value="buy" className="pt-4">
                       <div className="space-y-3">
                         {opportunities.buyOpportunities.map((stock, index) => (
-                          <div key={index} className="flex justify-between items-center p-3 bg-green-50/30 dark:bg-green-950/20 rounded-md">
+                          <div key={index} className="flex justify-between items-center p-3 bg-green-950/30 dark:bg-green-950/20 rounded-md hover:bg-green-950/40 transition-colors">
                             <div>
                               <div className="font-medium">{stock.symbol}</div>
                               <div className="text-sm text-muted-foreground">{stock.name}</div>
@@ -161,7 +188,7 @@ const Strategy: React.FC = () => {
                     <TabsContent value="sell" className="pt-4">
                       <div className="space-y-3">
                         {opportunities.sellOpportunities.map((stock, index) => (
-                          <div key={index} className="flex justify-between items-center p-3 bg-red-50/30 dark:bg-red-950/20 rounded-md">
+                          <div key={index} className="flex justify-between items-center p-3 bg-red-950/30 dark:bg-red-950/20 rounded-md hover:bg-red-950/40 transition-colors">
                             <div>
                               <div className="font-medium">{stock.symbol}</div>
                               <div className="text-sm text-muted-foreground">{stock.name}</div>
@@ -180,60 +207,74 @@ const Strategy: React.FC = () => {
                   </Tabs>
                 </CardContent>
               </Card>
+              
+              {viewMode === 'split' && (
+                <div className="hidden md:block">
+                  <AIMarketAnalysis />
+                </div>
+              )}
             </div>
             
-            <div className="md:col-span-2">
-              <Card className="h-full flex flex-col">
-                <CardHeader>
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <CardTitle>{currentStrategy.name}</CardTitle>
-                      <CardDescription>{currentStrategy.description}</CardDescription>
+            <div className={cn(
+              viewMode === 'split' ? "md:col-span-2" : "md:col-span-1"
+            )}>
+              {viewMode === 'aiView' && (
+                <AIMarketAnalysis />
+              )}
+              
+              {viewMode !== 'aiView' && (
+                <Card className="h-full flex flex-col bg-card/90 backdrop-blur-sm border-primary/10">
+                  <CardHeader>
+                    <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+                      <div>
+                        <CardTitle>{currentStrategy.name}</CardTitle>
+                        <CardDescription>{currentStrategy.description}</CardDescription>
+                      </div>
+                      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full sm:w-[240px]">
+                        <TabsList className="grid w-full grid-cols-2">
+                          <TabsTrigger value="editor">Editor</TabsTrigger>
+                          <TabsTrigger value="preview">Preview</TabsTrigger>
+                        </TabsList>
+                      </Tabs>
                     </div>
-                    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-[240px]">
-                      <TabsList className="grid w-full grid-cols-2">
-                        <TabsTrigger value="editor">Editor</TabsTrigger>
-                        <TabsTrigger value="preview">Preview</TabsTrigger>
-                      </TabsList>
-                    </Tabs>
-                  </div>
-                </CardHeader>
-                <CardContent className="flex-1 overflow-auto">
-                  {activeTab === 'editor' ? (
-                    <Textarea 
-                      value={editingStrategy} 
-                      onChange={(e) => setEditingStrategy(e.target.value)}
-                      className="h-[500px] font-mono"
-                    />
-                  ) : (
-                    <div className="prose dark:prose-invert max-w-none">
-                      <pre className="bg-muted p-4 rounded-md overflow-auto">
-                        {editingStrategy}
-                      </pre>
+                  </CardHeader>
+                  <CardContent className="flex-1 overflow-auto">
+                    {activeTab === 'editor' ? (
+                      <Textarea 
+                        value={editingStrategy} 
+                        onChange={(e) => setEditingStrategy(e.target.value)}
+                        className="h-[500px] font-mono bg-card/80 border-primary/10"
+                      />
+                    ) : (
+                      <div className="prose dark:prose-invert max-w-none">
+                        <pre className="bg-muted p-4 rounded-md overflow-auto text-sm">
+                          {editingStrategy}
+                        </pre>
+                      </div>
+                    )}
+                  </CardContent>
+                  <CardFooter className="border-t bg-muted/50 p-4">
+                    <div className="flex flex-col sm:flex-row justify-between w-full gap-2">
+                      <Button variant="outline" onClick={() => navigate('/analysis')}>
+                        View Analysis
+                      </Button>
+                      <Button onClick={handleSaveStrategy}>Save Strategy</Button>
                     </div>
-                  )}
-                </CardContent>
-                <CardFooter className="border-t bg-muted/50 p-4">
-                  <div className="flex justify-between w-full">
-                    <Button variant="outline" onClick={() => navigate('/analysis')}>
-                      View Analysis
-                    </Button>
-                    <Button onClick={handleSaveStrategy}>Save Strategy</Button>
-                  </div>
-                </CardFooter>
-              </Card>
+                  </CardFooter>
+                </Card>
+              )}
             </div>
           </div>
           
           <div className="mt-8">
-            <Card>
+            <Card className="bg-card/90 backdrop-blur-sm border-primary/10">
               <CardHeader>
                 <CardTitle>Performance Threshold Alerts</CardTitle>
                 <CardDescription>Stocks that have moved significantly</CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="overflow-x-auto">
                 <Tabs defaultValue="weekly">
-                  <TabsList className="mb-4">
+                  <TabsList className="mb-4 flex flex-wrap">
                     <TabsTrigger value="daily">Daily</TabsTrigger>
                     <TabsTrigger value="weekly">Weekly</TabsTrigger>
                     <TabsTrigger value="monthly">Monthly</TabsTrigger>
@@ -304,7 +345,7 @@ const ThresholdTable: React.FC<ThresholdTableProps> = ({ timeframe }) => {
   
   return (
     <div className="grid md:grid-cols-2 gap-6">
-      <div>
+      <div className="overflow-x-auto">
         <h3 className="text-lg font-medium mb-3 text-success flex items-center">
           <TrendingUp className="h-5 w-5 mr-2" /> Top Gainers
         </h3>
@@ -334,7 +375,7 @@ const ThresholdTable: React.FC<ThresholdTableProps> = ({ timeframe }) => {
         </Table>
       </div>
       
-      <div>
+      <div className="overflow-x-auto">
         <h3 className="text-lg font-medium mb-3 text-danger flex items-center">
           <TrendingDown className="h-5 w-5 mr-2" /> Top Losers
         </h3>

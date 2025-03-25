@@ -105,7 +105,7 @@ const simulateDeepSeekAnalysis = (request: AnalysisRequest): Promise<AnalysisRes
           // More specific for single stock
           const stockName = symbols[0];
           if (timeRange === 'day' || timeRange === 'week') {
-            summary = `${stockName} is showing ${Math.random() > 0.5 ? 'strength' : 'weakness'} in recent ${timeFrame} trading.`;
+            summary = `${stockName} is showing ${Math.random() > 0.5 ? 'strength' : 'weakness'} in recent ${timeRange} trading.`;
             insights = [
               `${stockName} ${Math.random() > 0.5 ? 'above' : 'below'} key moving averages`,
               `Volume analysis suggests ${Math.random() > 0.5 ? 'accumulation' : 'distribution'}`,

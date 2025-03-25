@@ -7,10 +7,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Brain, BrainCircuit, TrendingUp, LineChart, Calendar, Loader2, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Brain, BrainCircuit, TrendingUp, LineChart, Calendar, Loader2, AlertCircle, CheckCircle2, ArrowRight } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import { analyzeMarket, TimeRange, StockSymbol, AnalysisResponse } from '@/services/deepseekService';
-import { toast } from '@/components/ui/use-toast';
+import { toast } from 'sonner';
 
 // Stock options for analysis
 const stockOptions = [
@@ -55,10 +55,9 @@ const AIMarketAnalysis: React.FC = () => {
       const symbols = analysisType === 'index' ? [selectedIndex] : selectedStocks;
       
       if (symbols.length === 0) {
-        toast({
-          title: "No stocks selected",
+        toast("No stocks selected", {
           description: "Please select at least one stock for analysis",
-          variant: "destructive"
+          duration: 5000
         });
         setIsAnalyzing(false);
         return;
@@ -70,11 +69,14 @@ const AIMarketAnalysis: React.FC = () => {
       });
       
       setAnalysisResult(result);
+      toast("Analysis completed", {
+        description: "DeepSeek AI has analyzed your selected securities",
+        duration: 3000
+      });
     } catch (error) {
-      toast({
-        title: "Analysis failed",
+      toast("Analysis failed", {
         description: "There was an error analyzing the market data",
-        variant: "destructive"
+        duration: 5000
       });
       console.error("Analysis error:", error);
     } finally {
@@ -105,29 +107,29 @@ const AIMarketAnalysis: React.FC = () => {
   };
 
   return (
-    <Card className="border-t-4 border-t-primary shadow-md">
-      <CardHeader>
+    <Card className="ai-analysis-card w-full h-full">
+      <CardHeader className="pb-2">
         <div className="flex items-center gap-2">
           <BrainCircuit className="h-6 w-6 text-primary" />
-          <CardTitle>AI Market Analysis</CardTitle>
+          <CardTitle>DeepSeek AI Market Analysis</CardTitle>
         </div>
-        <CardDescription>
-          Use DeepSeek AI to analyze market trends and get trading insights
+        <CardDescription className="text-base opacity-90">
+          Get advanced AI-powered insights and trading recommendations
         </CardDescription>
       </CardHeader>
       
-      <CardContent>
-        <Tabs value={analysisType} onValueChange={(v) => setAnalysisType(v as 'index' | 'stock')}>
-          <TabsList className="w-full mb-4">
-            <TabsTrigger value="index" className="flex-1">Analyze Index</TabsTrigger>
-            <TabsTrigger value="stock" className="flex-1">Analyze Stocks</TabsTrigger>
+      <CardContent className="p-5">
+        <Tabs value={analysisType} onValueChange={(v) => setAnalysisType(v as 'index' | 'stock')} className="w-full">
+          <TabsList className="w-full mb-4 grid grid-cols-2">
+            <TabsTrigger value="index" className="text-sm font-medium">Analyze Index</TabsTrigger>
+            <TabsTrigger value="stock" className="text-sm font-medium">Analyze Stocks</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="index" className="space-y-4">
+          <TabsContent value="index" className="space-y-4 pt-2">
             <div className="space-y-2">
               <Label>Select Index</Label>
               <Select value={selectedIndex} onValueChange={setSelectedIndex}>
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select index" />
                 </SelectTrigger>
                 <SelectContent>
@@ -140,10 +142,15 @@ const AIMarketAnalysis: React.FC = () => {
             </div>
           </TabsContent>
           
-          <TabsContent value="stock" className="space-y-4">
+          <TabsContent value="stock" className="space-y-4 pt-2">
             <div className="space-y-2">
-              <Label>Select Stocks (up to 5)</Label>
-              <div className="max-h-40 overflow-y-auto border rounded-md p-2 space-y-2">
+              <Label className="flex justify-between">
+                <span>Select Stocks</span>
+                <span className="text-xs text-muted-foreground">
+                  {selectedStocks.length} of 5 stocks selected
+                </span>
+              </Label>
+              <div className="max-h-48 overflow-y-auto border rounded-md p-3 space-y-2 grid grid-cols-1 sm:grid-cols-2">
                 {stockOptions.map(stock => (
                   <div key={stock.value} className="flex items-center space-x-2">
                     <Checkbox 
@@ -161,14 +168,11 @@ const AIMarketAnalysis: React.FC = () => {
                   </div>
                 ))}
               </div>
-              <p className="text-xs text-muted-foreground">
-                {selectedStocks.length} of 5 stocks selected
-              </p>
             </div>
           </TabsContent>
         </Tabs>
         
-        <div className="space-y-4 mt-4">
+        <div className="space-y-4 mt-6">
           <div className="space-y-2">
             <Label>Time Range</Label>
             <div className="flex flex-wrap gap-2">
@@ -214,16 +218,16 @@ const AIMarketAnalysis: React.FC = () => {
           <Button 
             onClick={runAnalysis} 
             disabled={isAnalyzing || (analysisType === 'stock' && selectedStocks.length === 0)}
-            className="w-full"
+            className="w-full bg-primary/90 hover:bg-primary"
           >
             {isAnalyzing ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                 Analyzing...
               </>
             ) : (
               <>
-                <Brain className="mr-2 h-4 w-4" />
+                <Brain className="mr-2 h-5 w-5" />
                 Run AI Analysis
               </>
             )}
@@ -231,45 +235,54 @@ const AIMarketAnalysis: React.FC = () => {
         </div>
         
         {analysisResult && (
-          <div className="mt-6 space-y-4">
-            <Separator />
+          <div className="mt-8 space-y-4">
+            <Separator className="bg-border/30" />
             
-            <div className="space-y-2">
+            <div className="space-y-4 p-4 bg-card/50 rounded-lg border border-primary/20">
               <div className="flex justify-between items-center">
-                <h3 className="font-semibold text-lg">Analysis Results</h3>
+                <h3 className="font-semibold text-xl">Analysis Results</h3>
                 <Badge 
-                  className={`${getRecommendationColor(analysisResult.recommendation)} text-white`}
+                  className={`${getRecommendationColor(analysisResult.recommendation)} text-white px-3 py-1`}
                 >
                   {getRecommendationIcon(analysisResult.recommendation)}
-                  <span className="ml-1 uppercase">{analysisResult.recommendation}</span>
+                  <span className="ml-1 uppercase font-medium">{analysisResult.recommendation}</span>
                 </Badge>
               </div>
               
-              <p className="text-sm">
+              <p className="text-base leading-relaxed">
                 {analysisResult.summary}
               </p>
               
-              <div className="mt-4">
-                <h4 className="font-medium text-sm mb-2">Key Insights:</h4>
-                <ul className="space-y-2">
+              <div className="mt-6">
+                <h4 className="font-medium text-base mb-3 flex items-center">
+                  <LineChart className="h-5 w-5 text-primary mr-2" />
+                  Key Insights
+                </h4>
+                <ul className="space-y-3 pl-2">
                   {analysisResult.insights.map((insight, index) => (
-                    <li key={index} className="text-sm flex gap-2">
-                      <LineChart className="h-4 w-4 text-primary mt-1 flex-shrink-0" />
+                    <li key={index} className="text-base flex gap-3 items-start">
+                      <ArrowRight className="h-4 w-4 text-primary mt-1 flex-shrink-0" />
                       <span>{insight}</span>
                     </li>
                   ))}
                 </ul>
               </div>
               
-              <div className="mt-4 text-sm text-muted-foreground">
-                <p>Confidence level: {Math.round(analysisResult.confidence * 100)}%</p>
+              <div className="flex items-center gap-2 mt-4 text-sm text-muted-foreground py-2">
+                <div className="w-full bg-muted/50 h-2 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-primary" 
+                    style={{ width: `${Math.round(analysisResult.confidence * 100)}%` }}
+                  ></div>
+                </div>
+                <span>Confidence: {Math.round(analysisResult.confidence * 100)}%</span>
               </div>
             </div>
           </div>
         )}
       </CardContent>
       
-      <CardFooter className="flex flex-col text-xs text-muted-foreground border-t pt-4">
+      <CardFooter className="flex flex-col text-xs text-muted-foreground border-t pt-4 pb-4 px-6">
         <p>Powered by DeepSeek AI - Analysis is for informational purposes only</p>
       </CardFooter>
     </Card>

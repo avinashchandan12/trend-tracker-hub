@@ -5,26 +5,26 @@
 
 @layer base {
   :root {
-    --background: 220 33% 99%;
-    --foreground: 220 20% 10%;
+    --background: 152 10% 8%;
+    --foreground: 152 10% 98%;
 
-    --card: 220 33% 100%;
-    --card-foreground: 220 20% 10%;
+    --card: 152 10% 10%;
+    --card-foreground: 152 10% 98%;
 
-    --popover: 220 33% 100%;
-    --popover-foreground: 220 20% 10%;
+    --popover: 152 10% 10%;
+    --popover-foreground: 152 10% 98%;
 
-    --primary: 220 60% 50%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 142 71% 45%;
+    --primary-foreground: 152 10% 98%;
 
-    --secondary: 220 10% 94%;
-    --secondary-foreground: 220 20% 10%;
+    --secondary: 152 10% 15%;
+    --secondary-foreground: 152 10% 98%;
 
-    --muted: 220 10% 94%;
-    --muted-foreground: 220 10% 40%;
+    --muted: 152 10% 15%;
+    --muted-foreground: 152 10% 60%;
 
-    --accent: 220 10% 92%;
-    --accent-foreground: 220 20% 10%;
+    --accent: 152 10% 15%;
+    --accent-foreground: 152 10% 98%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
@@ -38,43 +38,43 @@
     --danger: 358 75% 59%;
     --danger-foreground: 0 0% 100%;
 
-    --border: 220 20% 90%;
-    --input: 220 20% 90%;
-    --ring: 220 60% 50%;
+    --border: 152 10% 20%;
+    --input: 152 10% 20%;
+    --ring: 142 71% 45%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 220 33% 99%;
-    --sidebar-foreground: 220 20% 10%;
-    --sidebar-primary: 220 60% 50%;
+    --sidebar-background: 152 10% 6%;
+    --sidebar-foreground: 152 10% 98%;
+    --sidebar-primary: 142 71% 45%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 10% 94%;
-    --sidebar-accent-foreground: 220 20% 10%;
-    --sidebar-border: 220 20% 90%;
-    --sidebar-ring: 220 60% 50%;
+    --sidebar-accent: 152 10% 12%;
+    --sidebar-accent-foreground: 152 10% 98%;
+    --sidebar-border: 152 10% 15%;
+    --sidebar-ring: 142 71% 45%;
   }
 
-  .dark {
-    --background: 220 20% 10%;
-    --foreground: 220 10% 90%;
+  .light {
+    --background: 0 0% 100%;
+    --foreground: 152 10% 10%;
 
-    --card: 220 20% 12%;
-    --card-foreground: 220 10% 90%;
+    --card: 0 0% 100%;
+    --card-foreground: 152 10% 10%;
 
-    --popover: 220 20% 12%;
-    --popover-foreground: 220 10% 90%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 152 10% 10%;
 
-    --primary: 220 60% 50%;
+    --primary: 142 71% 45%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 10% 16%;
-    --secondary-foreground: 220 10% 90%;
+    --secondary: 152 5% 94%;
+    --secondary-foreground: 152 10% 10%;
 
-    --muted: 220 10% 16%;
-    --muted-foreground: 220 10% 60%;
+    --muted: 152 5% 94%;
+    --muted-foreground: 152 10% 40%;
 
-    --accent: 220 10% 18%;
-    --accent-foreground: 220 10% 90%;
+    --accent: 152 5% 92%;
+    --accent-foreground: 152 10% 10%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
@@ -88,18 +88,18 @@
     --danger: 358 75% 59%;
     --danger-foreground: 0 0% 100%;
 
-    --border: 220 10% 20%;
-    --input: 220 10% 20%;
-    --ring: 220 60% 50%;
+    --border: 152 5% 90%;
+    --input: 152 5% 90%;
+    --ring: 142 71% 45%;
 
-    --sidebar-background: 220 20% 12%;
-    --sidebar-foreground: 220 10% 90%;
-    --sidebar-primary: 220 60% 50%;
+    --sidebar-background: 152 20% 96%;
+    --sidebar-foreground: 152 10% 10%;
+    --sidebar-primary: 142 71% 45%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 10% 16%;
-    --sidebar-accent-foreground: 220 10% 90%;
-    --sidebar-border: 220 10% 20%;
-    --sidebar-ring: 220 60% 50%;
+    --sidebar-accent: 152 5% 92%;
+    --sidebar-accent-foreground: 152 10% 10%;
+    --sidebar-border: 152 5% 85%;
+    --sidebar-ring: 142 71% 45%;
   }
 }
 
@@ -178,6 +178,10 @@
   .hover-scale {
     @apply hover:scale-[1.02] transition-transform-300;
   }
+  
+  .ai-analysis-card {
+    @apply border-t-4 border-t-primary bg-gradient-to-br from-card to-secondary/80 shadow-lg;
+  }
 }
 
 .recharts-wrapper .recharts-cartesian-grid-horizontal line:first-child,
@@ -203,4 +207,35 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(150, 150, 150, 0.3);
+}
+
+/* Responsive padding */
+@media (max-width: 640px) {
+  .responsive-container {
+    @apply px-2 py-2;
+  }
+  
+  .responsive-card {
+    @apply px-3 py-3;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .responsive-container {
+    @apply px-4 py-3;
+  }
+  
+  .responsive-card {
+    @apply px-4 py-4;
+  }
+}
+
+@media (min-width: 1025px) {
+  .responsive-container {
+    @apply px-6 py-4;
+  }
+  
+  .responsive-card {
+    @apply px-6 py-5;
+  }
 }
